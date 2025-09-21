@@ -57,12 +57,12 @@ def latest():
 
 @app.route("/", methods=["GET", "POST"])
 def traccar_adapter():
-    print("\n--- Incoming Request ---")
-    print("Method:", request.method)
-    print("Args:", dict(request.args))
-    print("Form:", dict(request.form))
-    print("JSON:", request.get_json(silent=True))
-    print("------------------------\n")
+    # print("\n--- Incoming Request ---")
+    # print("Method:", request.method)
+    # print("Args:", dict(request.args))
+    # print("Form:", dict(request.form))
+    # print("JSON:", request.get_json(silent=True))
+    # print("------------------------\n")
 
     data = request.get_json(silent=True) or {}
 
@@ -93,3 +93,4 @@ def traccar_adapter():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
