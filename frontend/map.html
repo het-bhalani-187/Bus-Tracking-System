@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time Bus Tracker</title>
+    <style>
+        /* Fullscreen map */
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+    <!-- Google Maps JS API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZLO8_1wDqc4QycB69KHSmpKiNUiZFMF0"></script>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        // Replace with your Render backend URL
+        const BACKEND_URL = "https://backend-3w31.onrender.com/latest";
+
+        let map;
+        let markers = {};
+
+        function initMap() {
+            // Initialize map centered on India
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 20.5937, lng: 78.9629 },
+                zoom: 5
+            });
+
+            // Start fetching bus locations
+            fetchBusLocations();
+            setInterval(fetchBusLocations, 20000); // every 20 seconds
+        }
+
+        function fetchBusLocations() {
+            fetch(BACKEND_URL)
+                .then(response => response.json())
+                .then(data => updateBusMarkers(data))
+                .catch(err => console.error("Error fetching bus data:", err));
+        }
+
+        function updateBusMarkers(buses) {
+            buses.forEach(bus => {
+                const position = { lat: bus.lat, lng: bus.lon };
+
+                if (markers[bus.bus_id]) {
+                    // Move existing marker
+                    markers[bus.bus_id].setPosition(position);
+                } else {
+                    // Create new marker
+                    markers[bus.bus_id] = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: bus.bus_id
+                    });
+                }
+            });
+        }
+
+        // Initialize map when page loads
+        window.onload = initMap;
+    </script>
+</body>
+</html>
